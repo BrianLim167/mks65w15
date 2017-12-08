@@ -5,8 +5,10 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/sem.h>
+#include <sys/shm.h>
 
 #define KEY 9880
+#define KEY2 3880
 
 union semun{
   int val;
@@ -25,6 +27,10 @@ int main(int argc, char **argv){
         return 1;
       }
       int semaphore = semget(KEY, 1, IPC_CREAT | IPC_EXCL | 0644);
+      int shmd = shmget(KEY2, 256, IPC_CREAT | IPC_EXCL | 0644);
+      char * mem;
+      if (shmd == -1){printf("Shared mem segment already exists.\n");}
+      else{mem = shmat(shmd, 0, 0);}
       if ( semaphore == -1 ) {
         printf("semaphore already exists\n");
       } else {
@@ -34,6 +40,7 @@ int main(int argc, char **argv){
 	su.val = semval;
         semctl(semaphore, 0, SETVAL, su);
         printf("semaphore %d created with value %d\n", semaphore, semval);
+	printf("Shared memory segment created %s\n", mem);
       }
 
       return 0;
