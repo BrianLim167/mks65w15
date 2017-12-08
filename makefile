@@ -1,7 +1,7 @@
 all: controller.c
-	gcc controller.c -o controller
+	gcc semaphone.c -o semaphone
 run: all
-	./controller $(flag) $(n)
+	./semaphone $(flag) $(n)
 clean:
 	rm -f *~
 	rm -f *.o
