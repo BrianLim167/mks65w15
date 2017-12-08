@@ -22,7 +22,9 @@ int main(int argc, char **argv){
       } else {
         int semval;
         sscanf(argv[2], "%d", &semval);
-        semctl(semaphore, 0, SETVAL, semval);
+	union semun su;
+	su.val = semval;
+        semctl(semaphore, 0, SETVAL, su);
         printf("semaphore %d created with value %d\n", semaphore, semval);
       }
 
