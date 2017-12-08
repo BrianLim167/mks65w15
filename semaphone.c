@@ -8,6 +8,14 @@
 
 #define KEY 9880
 
+union semun{
+  int val;
+  struct semid_ds *buf;
+  unsigned short *array;
+  struct seminfo *__buf;
+};
+
+
 int main(int argc, char **argv){
   if ( argc > 1 ) {
 

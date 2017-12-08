@@ -1,4 +1,4 @@
-all: controller.c
+all: semaphone.c
 	gcc semaphone.c -o semaphone
 run: all
 	./semaphone $(flag) $(n)
