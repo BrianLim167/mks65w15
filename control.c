@@ -3,6 +3,7 @@
 void print_error(int val){
   if (val == -1){
     printf("Error occurred: %s\n", strerror(errno));
+    exit(0);
   }
 }
 
@@ -47,12 +48,18 @@ int main(int argct, char** args){
     else if(strcmp(args[1], "-v") == 0){
       printf("Story:%s\n", get_story());
     }
-    //remove the semaphore :'(
+    //remove the semaphore, shared memory, and story file
     else if (strcmp(args[1], "-r") == 0){
       sem = semget(SEM_KEY, 0, 0);
       int val = semctl(sem, 0, IPC_RMID);
-      if (val == -1){printf("Error occured: %s\n", strerror(errno));}
-      else{printf("Removed semaphore: %d\n", val);}
+      print_error(val);
+      printf("Removed semaphore: %d\n", val);
+      shm = shmget(SHM_KEY, 256, 0);
+      val = shmctl(shm, IPC_RMID, 0);
+      print_error(val);
+      printf("Shared memory segment removed.\n");
+      printf("Story:%s\n", get_story());
+      remove("story");
     }
     else{
       printf("Could not read input.\n");
