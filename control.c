@@ -37,38 +37,52 @@ int main(int argct, char** args){
     //semaphore, shared memory, and story creation
     //if strcmp() == 0 
     if(strcmp(args[1], "-c") == 0){
+      //create the semaphore
       sem = semget(SEM_KEY, 1, IPC_CREAT | IPC_EXCL | 0644);
-      print_error(sem);
+      if(sem == -1){printf("Semaphore already exists.\n");exit(0);}
+
+      //use the union semun
       union semun su;
       su.val = 1;
+
+      //set the value of the semaphore to 1
       int val = semctl(sem, 0, SETVAL, su);
-      if(val == -1){printf("Semaphore already exists.\n");}
+      print_error(val);
       printf("Semaphore %d created with value %d.\n", sem, 1);
+
+      //create a shared mem segment
       shm = shmget(SHM_KEY, 8, IPC_CREAT | 0644);
-      print_error(shm);
+      if(shm == -1){printf("Shared memory segment already exists.\n");exit(0);}
       printf("Shared memory segment created.\n");
+
+      //create a story file
       fd = open("story", O_CREAT | O_TRUNC, 0644);
       close(fd);
-      print_error(fd);
       printf("Story created.\n");
     }
-    //prints out entire story
-    //malloc -> free
+    //Prints out entire story
+    //Always free after mem alloc!!
     else if(strcmp(args[1], "-v") == 0){
+      //retrieve the story
       char * me = get_story();
-      printf("Story:%s\n", me);
+      printf("Story:\n%s\n", me);
       free(me);
     }
     //remove the semaphore, shared memory, and story file
     else if (strcmp(args[1], "-r") == 0){
+      //get the semaphore and remove it
       sem = semget(SEM_KEY, 0, 0);
       int val = semctl(sem, 0, IPC_RMID);
       print_error(val);
       printf("Removed semaphore: %d\n", val);
+
+      //get the shared mem seg and remove it
       shm = shmget(SHM_KEY, 8, 0);
       val = shmctl(shm, IPC_RMID, 0);
       print_error(val);
       printf("Shared memory segment removed.\n");
+
+      //print and remove story file
       char * me = get_story();
       printf("Story:\n%s\n", me);
       free(me);
