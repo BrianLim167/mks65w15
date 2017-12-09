@@ -40,14 +40,14 @@ int main(int argct, char** args){
       sem = semget(SEM_KEY, 1, IPC_CREAT | IPC_EXCL | 0644);
       print_error(sem);
       union semun su;
-      su.val = 8;
+      su.val = 1;
       int val = semctl(sem, 0, SETVAL, su);
       print_error(val);
-      printf("Semaphore %d created with value %d.\n", sem, 8);
+      printf("Semaphore %d created with value %d.\n", sem, 1);
       shm = shmget(SHM_KEY, 256, IPC_CREAT | 0644);
       print_error(shm);
       printf("Shared memory segment created.\n");
-      fd = open("story", O_CREAT | O_APPEND, 0644);
+      fd = open("story", O_CREAT | O_TRUNC, 0644);
       close(fd);
       print_error(fd);
       printf("Story created.\n");
