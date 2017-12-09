@@ -3,4 +3,6 @@ all: semaphone.c
 run: all
 	./semaphone $(flag) $(n)
 clean:
-	rm -f *~ *.o semaphone control
+	rm -f *~ *.o control client
+wipe:
+	rm story
