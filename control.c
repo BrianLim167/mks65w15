@@ -1,5 +1,12 @@
+/*
+ * Jen Yu and Brian Lim
+ * Systems Pd 10
+ * W#15: Semaphone!
+ * 2017-12-09
+ */
 #include "head.h"
 
+//prints out errors
 void print_error(int val){
   if (val == -1){
     printf("Error occurred: %s\n", strerror(errno));
@@ -7,6 +14,7 @@ void print_error(int val){
   }
 }
 
+//retrieves story from story file
 char * get_story(){
   int fd;
   struct stat sb;
@@ -26,7 +34,7 @@ int main(int argct, char** args){
     exit(0);
   }
   else{
-    //semaphore creation!
+    //semaphore, shared memory, and story creation
     //if strcmp() == 0 
     if(strcmp(args[1], "-c") == 0){
       sem = semget(SEM_KEY, 1, IPC_CREAT | IPC_EXCL | 0644);
