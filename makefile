@@ -3,5 +3,4 @@ all: semaphone.c
 run: all
 	./semaphone $(flag) $(n)
 clean:
-	rm -f *~
-	rm -f *.o
+	rm -f *~ *.o semaphone control
