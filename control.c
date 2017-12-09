@@ -45,8 +45,11 @@ int main(int argct, char** args){
       printf("Story created.\n");
     }
     //prints out entire story
+    //malloc -> free
     else if(strcmp(args[1], "-v") == 0){
-      printf("Story:%s\n", get_story());
+      char * me = get_story();
+      printf("Story:%s\n", me);
+      free(me);
     }
     //remove the semaphore, shared memory, and story file
     else if (strcmp(args[1], "-r") == 0){
@@ -58,7 +61,9 @@ int main(int argct, char** args){
       val = shmctl(shm, IPC_RMID, 0);
       print_error(val);
       printf("Shared memory segment removed.\n");
-      printf("Story:%s\n", get_story());
+      char * me = get_story();
+      printf("Story:%s\n", me);
+      free(me);
       remove("story");
     }
     else{
