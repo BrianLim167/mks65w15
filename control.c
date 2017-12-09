@@ -42,9 +42,9 @@ int main(int argct, char** args){
       union semun su;
       su.val = 1;
       int val = semctl(sem, 0, SETVAL, su);
-      print_error(val);
+      if(val == -1){printf("Semaphore already exists.\n");}
       printf("Semaphore %d created with value %d.\n", sem, 1);
-      shm = shmget(SHM_KEY, 256, IPC_CREAT | 0644);
+      shm = shmget(SHM_KEY, 8, IPC_CREAT | 0644);
       print_error(shm);
       printf("Shared memory segment created.\n");
       fd = open("story", O_CREAT | O_TRUNC, 0644);
@@ -65,12 +65,12 @@ int main(int argct, char** args){
       int val = semctl(sem, 0, IPC_RMID);
       print_error(val);
       printf("Removed semaphore: %d\n", val);
-      shm = shmget(SHM_KEY, 256, 0);
+      shm = shmget(SHM_KEY, 8, 0);
       val = shmctl(shm, IPC_RMID, 0);
       print_error(val);
       printf("Shared memory segment removed.\n");
       char * me = get_story();
-      printf("Story:%s\n", me);
+      printf("Story:\n%s\n", me);
       free(me);
       remove("story");
     }
