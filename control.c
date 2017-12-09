@@ -3,8 +3,18 @@
 void print_error(int val){
   if (val == -1){
     printf("Error occurred: %s\n", strerror(errno));
-    exit(0);
   }
+}
+
+char * get_story(){
+  int fd;
+  struct stat sb;
+  char * ret;
+  fd = open("story", O_RDONLY);
+  print_error(fd);
+  stat("story", &sb);
+  read(fd, ret = malloc(sb.st_size), sb.st_size);
+  return ret;
 }
 
 int main(int argct, char** args){
@@ -33,13 +43,9 @@ int main(int argct, char** args){
       print_error(fd);
       printf("Story created.\n");
     }
-    //semaphore value procural!!
-    //gets the semaphore val
+    //prints out entire story
     else if(strcmp(args[1], "-v") == 0){
-      sem = semget(SEM_KEY, 0, 0);
-      int val = semctl(sem, 0, GETVAL);
-      if (val == -1){printf("Error occured: %s\n", strerror(errno));}
-      else{printf("Value of semaphore: %d\n", val);}
+      printf("Story:%s\n", get_story());
     }
     //remove the semaphore :'(
     else if (strcmp(args[1], "-r") == 0){
