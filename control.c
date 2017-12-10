@@ -70,6 +70,30 @@ int main(int argct, char** args){
     }
     //remove the semaphore, shared memory, and story file
     else if (strcmp(args[1], "-r") == 0){
+      //code from client file, should only remove if semaphore is open
+      //interact with the semaphore
+      sem = semget(SEM_KEY, 1, 0);
+      if (sem == -1){
+	printf("Program has not been initialized.\n");
+	exit(0);
+      }
+  
+      //Attempts to take semaphore
+      printf("Waiting for access...\n");
+      //semop(sem, sembuf, size_t nspos)
+      struct sembuf sbuf;
+      sbuf.sem_num = 0;
+      sbuf.sem_op = -1;
+      //SEM_UNDO blocks when sem's value is 0 (in use)
+      sbuf.sem_flg = SEM_UNDO;
+      //printf("%d\n",semctl(sem, 0, GETVAL));
+      //sleep(1);
+
+      //takes the semaphore
+      //only one user at a time
+      semop(sem, &sbuf, 1);
+      printf("Access granted.\n");
+      
       //get the semaphore and remove it
       sem = semget(SEM_KEY, 0, 0);
       int val = semctl(sem, 0, IPC_RMID);
