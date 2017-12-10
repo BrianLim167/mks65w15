@@ -20,7 +20,7 @@ char * get_story(){
   struct stat sb;
   char * ret;
   fd = open("story", O_RDONLY);
-  print_error(fd);
+  if (fd == -1){printf("Program has not been initialized.\n");exit(0);}
   stat("story", &sb);
   read(fd, ret = malloc(sb.st_size), sb.st_size);
   return ret;
@@ -39,7 +39,7 @@ int main(int argct, char** args){
     if(strcmp(args[1], "-c") == 0){
       //create the semaphore
       sem = semget(SEM_KEY, 1, IPC_CREAT | IPC_EXCL | 0644);
-      if(sem == -1){printf("Semaphore already exists.\n");exit(0);}
+      if(sem == -1){printf("Program has already been initialized.\n");exit(0);}
 
       //use the union semun
       union semun su;

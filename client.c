@@ -13,11 +13,12 @@ int main()
   //interact with the semaphore
   sem = semget(SEM_KEY, 1, 0);
   if (sem == -1){
-    printf("semaphore does not exist.\n");
+    printf("Program has not been initialized.\n");
     exit(0);
   }
+  
   //Attempts to access story document
-  printf("Waiting for opening...\n");
+  printf("Waiting for access...\n");
   //semop(sem, sembuf, size_t nspos)
   struct sembuf sbuf;
   sbuf.sem_num = 0;
@@ -27,7 +28,8 @@ int main()
   //printf("%d\n",semctl(sem, 0, GETVAL));
   //sleep(1);
 
-  //perform semaphore operations
+  //takes the semaphore
+  //only one user at a time
   semop(sem, &sbuf, 1);
   printf("Accessed story!\n");
 
@@ -55,13 +57,13 @@ int main()
   //update the shm with the length of last addition
   //specified in assignment
   *len = strlen(new);
+
+  //detach the shm
+  shmdt(len);
   
   //write the input to the end of the story
   lseek(fd, 0, SEEK_END);
   write(fd, new, strlen(new));
-  
-  //detach the shm
-  shmdt(len);
   
   //release the semaphore
   sbuf.sem_op = 1;
