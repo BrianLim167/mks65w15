@@ -13,9 +13,11 @@
 #define SEM_KEY 9880
 #define SHM_KEY 3880
 
-union semun{
-  int val;
+#if defined(__linux__)
+union semun {
+  int val; 
   struct semid_ds *buf;
-  unsigned short *array;
-  struct seminfo *__buf;
+  unsigned short  *array;
+  struct seminfo  *__buf;
 };
+#endif
